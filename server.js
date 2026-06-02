@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const xml2js = require("xml2js");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 app.use(cors());
@@ -41,6 +42,8 @@ async function fetchFeed(feed) {
   }
 }
 
+app.use(express.static(path.join(__dirname, "public")));
+
 // API endpoint
 app.get("/api/news", async (req, res) => {
   const results = await Promise.all(FEEDS.map(fetchFeed));
@@ -56,7 +59,7 @@ app.get("/api/news", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("NewsFlow Proxy працює 🚀");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.listen(PORT, () => {
