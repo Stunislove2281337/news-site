@@ -55,6 +55,10 @@ app.get("/api/news", async (req, res) => {
   });
 });
 
+app.get("/", (req, res) => {
+  res.send("NewsFlow Proxy працює 🚀");
+});
+
 app.listen(PORT, () => {
   console.log("🚀 Proxy running on port " + PORT);
 });
