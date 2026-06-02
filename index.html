@@ -196,7 +196,7 @@ footer{margin-top:40px;padding:20px 24px;border-top:1px solid var(--border);disp
 </footer>
 
 <script>
-const API = 'https://news-site-gj83.onrender.com/api/news';
+const API = 'http://localhost:3000/api/news';
 const FEEDS = [
   {url:'https://feeds.bbci.co.uk/news/world/rss.xml',      name:'BBC World',  cat:'Світ',       clr:'#4f9eff'},
   {url:'https://feeds.bbci.co.uk/news/technology/rss.xml', name:'BBC Tech',   cat:'Технології', clr:'#4caf82'},
@@ -249,31 +249,24 @@ function setStatus(msg,cls){
 }
 
 async function loadAllFeeds() {
-  try {
-    setStatus('⏳ Завантаження новин...', '');
+   const res = await fetch(API);
+  const data = await res.json();
 
-    const response = await fetch(API_URL);
-    const data = await response.json();
+  allArticles = data.items;
 
-    allArticles = data.items;
-
-    setStatus(
-      `✓ Завантажено ${allArticles.length} новин`,
-      'status-ok'
-    );
-
-    updateInformers();
-    buildFilters();
-    buildTags();
-    buildActivityChart();
-    buildSourceList();
-    buildTicker();
-    applyFilter();
-
-  } catch (e) {
-    setStatus('⚠ Помилка завантаження новин', 'status-err');
-    console.error(e);
+  if (!allArticles.length) {
+    document.getElementById('news-list').innerHTML =
+      '<div class="error-msg">⚠ Нема новин</div>';
+    return;
   }
+
+  updateInformers();
+  buildFilters();
+  buildTags();
+  buildActivityChart();
+  buildSourceList();
+  buildTicker();
+  applyFilter();
 }
 
 function updateInformers(){
