@@ -7,6 +7,7 @@ const app = express();
 app.use(cors());
 
 const parser = new xml2js.Parser();
+const PORT = process.env.PORT || 3000;
 
 // твої RSS
 const FEEDS = [
@@ -35,6 +36,7 @@ async function fetchFeed(feed) {
       clr: feed.clr
     }));
   } catch (e) {
+    console.log("RSS error:", feed.name, e.message);
     return [];
   }
 }
@@ -53,6 +55,6 @@ app.get("/api/news", async (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("🚀 Proxy running on http://localhost:3000");
+app.listen(PORT, () => {
+  console.log("🚀 Proxy running on port " + PORT);
 });
